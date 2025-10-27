@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id         String @id @default(uuid())
+  name       String @unique
+  email      String @unique
+  password   String 
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  tasks Task[]
+  colorConfig UserColorConfig[]
+  @@map("users")
+}
+
+model Task {
+  id           String @id @default(uuid())
+  task         String
+  date         DateTime
+  isComplete   Boolean
+  description  String?
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @default(now())
+  
+  userId  String
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("tasks")
+}
+
+model UserColorConfig {
+  id    String @id @default(uuid())
+  text       String
+  actions    String
+  background String
+  components String
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  @@map("userColorConfigs")
+}
