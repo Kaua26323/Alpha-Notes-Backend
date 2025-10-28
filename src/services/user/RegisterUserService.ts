@@ -49,7 +49,7 @@ class RegisterUserService {
     const token = sign(
       {
         name:  user.name,
-        emial: user.email
+        email: user.email
       },
       process.env.JMT_SECRET as string,
       {
